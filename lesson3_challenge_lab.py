@@ -54,7 +54,7 @@ def get_flight_status(flight):
 
 def departure_board():
     print("\nDEPARTURE BOARD")
-    for index, flight in enumerate(flights, start=0):
+    for index, flight in enumerate(flights):
         status = get_flight_status(flight)
         gate = flight["gate"] 
         if flight["gate"] == "None":
@@ -128,8 +128,6 @@ def analyse_flights():
         "busiest_flight": busiest_flight,
         "above_80_percent": above_80_percent,
     }
-
-#analyse_flights()
 
 # Part 5
 
