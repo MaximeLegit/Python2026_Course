@@ -17,7 +17,7 @@ def calculate_area(width, height):
 
 # Part A
 
-""" 
+
 def greet():
     print("Howdy")
 
@@ -55,10 +55,9 @@ introduce("Max","London") # Both parameters are supplied and default one is over
 
 print("Random calculation", 5 * calculate_area(4,5))
 
- """
 
 # Part B Return values
-"""
+
 def is_even(number):
     return number % 2 == 0
 print("Is numba 4 even?",is_even(4))
@@ -81,9 +80,9 @@ def classify_score(score):
 def full_name(first_name, last_name):
     print(f"First name:",first_name,"Last name:",last_name)
 full_name("Lola", "Go")
-"""
 
-"""
+
+
 def calculate_discount(price, percent):
     return price - (price * (percent / 100))
 #print(int(calculate_discount(100, 25)))
@@ -96,7 +95,7 @@ def show_example():
 print("\nPrint form a function", show_example(), "vs. returning a value", int(calculate_discount(100, 25)))
 print("Since the func returns a value and we do nothing with it, hence the none. Proper way is to either bind the result" \
     "to a variable, or call directly like I do and print its return")
-"""
+
 
 # Part C Defaults and keywords
 
