@@ -345,3 +345,13 @@ passing_students = [{student["Name"] : student["score"]} for student in stretch_
 
 
 # G.5
+
+print("I beleive by using standart functions like min(), max(), sum(), average(), sorted()"
+      "we can reduce code that otherwise would be us remaking those functions." \
+      "\nSince they are predefined, it is much easier to call them rather than reinvent the wheel so to speak, or, write.")
+
+# example from the previous assignment:
+def flexible_statistics(*numbers):
+    print(f"In the supplied list of numbers, min={min(numbers)} max={max(numbers)}, \
+    average={sum(numbers)/len(numbers)}, total={sum(numbers)}, count={len(numbers)}")
+flexible_statistics(1, 2, 3, 4, 5)
