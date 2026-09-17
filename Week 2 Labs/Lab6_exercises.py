@@ -162,7 +162,7 @@ list_of_tasks = ["clean", "study", "work", "cook", "relax"]
 indexed_list = []
 for index, value in enumerate(list_of_tasks):
     indexed_list.append(["Task" + str(index) + ":" + value])
-    #print("Task" + str(index) + ":",value)
+    print("Task" + str(index) + ":",value)
 #print(*list_of_tasks) # not certain but perhaps you guys wanted this option, or just a plain old new line print per task in the given list.
 #print(*indexed_list)
 
@@ -225,10 +225,10 @@ data_set = [{"score": 10, "Name" :"Lola" } ,
 
 # where key is getDataSetValue where key is what i look for and sort based on what I return, value of ...
 sorted_data_set = sorted(data_set, key = lambda data_set_value: data_set_value["score"])
-print("Sorted ascending:", sorted_data_set)
+#print("Sorted ascending:", sorted_data_set)
 
 sorted_data_set = sorted(data_set, key = lambda data_set_value: data_set_value["score"], reverse=True)
-print("Sorted descending:", sorted_data_set)
+#print("Sorted descending:", sorted_data_set)
 print("\n\n")
 
 # E.3
@@ -239,7 +239,6 @@ print("Sort products by price using lambda: ", sorted(updated_products, key = la
 unsorted_list = [{"first_name": "Arnold", "last_name": "Muscles"}, 
                  {"first_name": "Ronnie", "last_name": "Calman"},
                  {"first_name": "Sophie", "last_name": "Turner"}]
-
 
 # F.2
 #Use .strip().title() to normalize the names and categories. That's all.
