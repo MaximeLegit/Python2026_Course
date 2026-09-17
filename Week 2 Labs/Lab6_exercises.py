@@ -162,7 +162,7 @@ list_of_tasks = ["clean", "study", "work", "cook", "relax"]
 indexed_list = []
 for index, value in enumerate(list_of_tasks):
     indexed_list.append(["Task" + str(index) + ":" + value])
-    print("Task" + str(index) + ":",value)
+    #print("Task" + str(index) + ":",value)
 #print(*list_of_tasks) # not certain but perhaps you guys wanted this option, or just a plain old new line print per task in the given list.
 #print(*indexed_list)
 
@@ -214,7 +214,7 @@ a, b = b, a
 # Part E sorted lambda
 
 # E.1
-print("Sorting variable list_of_tasks by length:", sorted(list_of_tasks, key = lambda name : len(name)))
+#print("Sorting variable list_of_tasks by length:", sorted(list_of_tasks, key = lambda name : len(name)))
 
 # E.2
 
@@ -229,16 +229,91 @@ sorted_data_set = sorted(data_set, key = lambda data_set_value: data_set_value["
 
 sorted_data_set = sorted(data_set, key = lambda data_set_value: data_set_value["score"], reverse=True)
 #print("Sorted descending:", sorted_data_set)
-print("\n\n")
+
 
 # E.3
 updated_products = {"apple": 10, "chewing gum": 25, "banana" : 170, "potato" : 8, "gurka" : 19}
-print("Sort products by price using lambda: ", sorted(updated_products, key = lambda product : updated_products[product]))
+#print("Sort products by price using lambda: ", sorted(updated_products, key = lambda product : updated_products[product]))
 
 # E.4
 unsorted_list = [{"first_name": "Arnold", "last_name": "Muscles"}, 
                  {"first_name": "Ronnie", "last_name": "Calman"},
                  {"first_name": "Sophie", "last_name": "Turner"}]
 
-# F.2
-#Use .strip().title() to normalize the names and categories. That's all.
+# E.5 
+scores = [78, 92, 55, 81, 67, 95, 73]
+def normal_sort_function(data):
+    print(sorted(data))
+normal_sort_function("normal Sorted List:", scores)
+
+lambda_sorted_list = sorted(scores, key = lambda score : score)
+print("Lambda Sorted List:",lambda_sorted_list)
+
+# Lamba functions are not logical for me. If I take this example, lambda_sorted.. I return a list which is sorted by the value I return from my function.
+# For this particular case, I would stick to built in function to either print or return the sorted list, that is it.
+
+
+# Part F Applied challenge
+
+print("\n\n")
+
+# F.1-2
+messy_dictionaries = [
+        {"name": "Laptop ", "category" : "electROnics", "price": 120, "stock": 1},
+        {"name": " Mouse", "category" : "Electronics", "price": 300, "stock": 0},
+        {"name": "kEyboard", "category" : "electroniCS", "price": 400, "stock": 2},
+        {"name": " Detergent ", "category" : "cleaning ", "price": 1200, "stock": 4},
+        {"name": "AirDuster ", "category" : "CleaninG", "price": 4250, "stock": 0},
+        {"name": "Webcam", "category" : "electronics ", "price": 2000, "stock": 6}
+]
+
+cleaned_dictionaries = [messy["name"].strip().title() for messy in messy_dictionaries]
+#print(cleaned_dictionaries)
+
+
+# F.3
+list_of_in_stock_merch = []
+for product in messy_dictionaries:
+    if (product["stock"] > 0):
+        list_of_in_stock_merch.append(product["name"].strip().title())
+#print("Products in stock are:", list_of_in_stock_merch)
+
+
+# F.4
+#print(set([messy["category"].strip().title() for messy in messy_dictionaries]))
+
+
+# F.5
+product_to_invetory_mapping = []
+for product in messy_dictionaries:
+    if(product["stock"] > 0):
+        product_to_invetory_mapping.append(f"{product["name"]} : {product["price"] * product["stock"]}")
+
+test2 = [{product["name"].strip() : product["price"] * product["stock"]} for product in messy_dictionaries if (product["stock"] > 0)]
+
+#print(product_to_invetory_mapping) # or test2
+
+
+# F.6
+sorted_dictionaries = sorted(messy_dictionaries, key = lambda value: value["stock"], reverse=True)
+#print(sorted_dictionaries)
+
+
+# F.7
+unranked_report = {"James": 10, "Sunny": 25, "ishtar" : 170, "Rami" : 8, "Sam" : 19}
+print([(rank, name) for rank, name in enumerate(unranked_report)])
+
+# F.8
+product_prices = [250, 400, 150, 700]
+edible_products = ["banana", "apple", "kiwi", "icecream"]
+zipped_pair = zip(edible_products, product_prices)
+for product, price in zipped_pair:
+    print(product, price)
+
+# F.9
+# A good examplke I have written I think is in F.5 section. I prefer the first approach to test2 there, since it is clearer for me that
+# for every product in my dictionary, I check the condition, hten I append it to the list. Whilst test2 works, it may even look nicer,
+# I personally think it is not a good approach.
+
+
+# Part G - Stretchhhhhhhhhhhh

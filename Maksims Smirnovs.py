@@ -30,7 +30,7 @@ for product in products:
         if (current_highest_price < product["price"]):
             highest_price = {product["name"] : product["price"]}
             current_highest_price = product["price"]
-        #print("Products in stock are:", product["name"])
+        print("Products in stock are:", product["name"])
 
 print("Total value of all products in stock:", total, "Highest price item:", highest_price)
 
