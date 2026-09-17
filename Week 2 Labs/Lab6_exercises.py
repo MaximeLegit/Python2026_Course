@@ -244,18 +244,16 @@ unsorted_list = [{"first_name": "Arnold", "last_name": "Muscles"},
 scores = [78, 92, 55, 81, 67, 95, 73]
 def normal_sort_function(data):
     print(sorted(data))
-normal_sort_function("normal Sorted List:", scores)
+#normal_sort_function(scores)
 
 lambda_sorted_list = sorted(scores, key = lambda score : score)
-print("Lambda Sorted List:",lambda_sorted_list)
+#print("Lambda Sorted List:",lambda_sorted_list)
 
 # Lamba functions are not logical for me. If I take this example, lambda_sorted.. I return a list which is sorted by the value I return from my function.
 # For this particular case, I would stick to built in function to either print or return the sorted list, that is it.
 
 
 # Part F Applied challenge
-
-print("\n\n")
 
 # F.1-2
 messy_dictionaries = [
@@ -301,14 +299,14 @@ sorted_dictionaries = sorted(messy_dictionaries, key = lambda value: value["stoc
 
 # F.7
 unranked_report = {"James": 10, "Sunny": 25, "ishtar" : 170, "Rami" : 8, "Sam" : 19}
-print([(rank, name) for rank, name in enumerate(unranked_report)])
+#print([(rank, name) for rank, name in enumerate(unranked_report)])
 
 # F.8
-product_prices = [250, 400, 150, 700]
-edible_products = ["banana", "apple", "kiwi", "icecream"]
-zipped_pair = zip(edible_products, product_prices)
-for product, price in zipped_pair:
-    print(product, price)
+#product_prices = [250, 400, 150, 700]
+#edible_products = ["banana", "apple", "kiwi", "icecream"]
+#zipped_pair = zip(edible_products, product_prices)
+#for product, price in zipped_pair:
+#    print(product, price)
 
 # F.9
 # A good examplke I have written I think is in F.5 section. I prefer the first approach to test2 there, since it is clearer for me that
@@ -317,3 +315,33 @@ for product, price in zipped_pair:
 
 
 # Part G - Stretchhhhhhhhhhhh
+
+# G.1
+product_prices_v2 = [[250, 400], [150, 700], [999, 777]]
+flatten_me = [price for sublist in product_prices_v2 for price in sublist]
+print(flatten_me)
+
+
+# G.2
+multiplication_table = [(number, number * x) for number in range(1,5) for x in range(1,4)]
+#for x, y in multiplication_table:
+#    print(x, y)
+
+
+# G.3
+stretch_data_set = [{"score": 70, "Name" :"Lola" } , 
+                {"score": 85, "Name" :"Hora"}, 
+                {"score" : 55, "Name" :"Nova"}, 
+                {"score" : 65, "Name" :"Sora"}]
+
+passing_students = [{student["Name"] : student["score"]} for student in stretch_data_set if (student["score"] >= 65)]
+#print(passing_students)
+
+
+# G.4
+#print("Is list non empty?", any(passing_students))
+#print("Does the list containt only passing student?", all(ps["score"] >= 65 for ps in stretch_data_set))
+#print("Does the list containt failing students as well?", all(ps["score"] >= 55 for ps in stretch_data_set))
+
+
+# G.5
