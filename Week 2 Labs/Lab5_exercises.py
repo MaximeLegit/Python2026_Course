@@ -287,7 +287,7 @@ def call_summary(function_name, *args, **kwargs):
     print("Assuming I understood you, when the call_summary is called with a parameter," \
     "the *args represents positional values, where we do not know how many of them will be supplied to the function, they can be int, strings, a mix of both from what I have seen." \
     "Lastly, the ***kwargs, I see what we can put many names arguments inside, lots of metadata. It can even be used in a neat way in classes. Essentially, it is a bulk of data" \
-    "that one must traverse to get what is required. So calling inside of the function kwargs will containt the entirety of what has been supplied.")
+    "that one must traverse to get what is required. So calling inside of the function kwargs will contain the entirety of what has been supplied.")
 
 def flexible_statistics(*numbers):
     print(f"In the supplied list of numbers, min={min(numbers)} max={max(numbers)}, average={sum(numbers)/len(numbers)}, total={sum(numbers)}, count={len(numbers)}")
@@ -315,3 +315,4 @@ print_string("MaxIsWorking")
 def print_in_reverse(input_list):
     print(input_list[::-1])
 print_in_reverse([99, 88, 77, 25, 0, -1, -3, -5])
+

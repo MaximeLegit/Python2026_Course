@@ -32,7 +32,7 @@ for product in products:
             current_highest_price = product["price"]
         #print("Products in stock are:", product["name"])
 
-#print("Total value of all products in stock:", total, "Highest price item:", highest_price)
+print("Total value of all products in stock:", total, "Highest price item:", highest_price)
 
 
 
@@ -61,7 +61,7 @@ scores = [78, 92, 55, 81, 67, 95, 73]
 def calculate_average(scores):
     return sum(scores) / len(scores)
 average_value = calculate_average(scores)
-#print(average_value)
+print(average_value)
 
 def create_result(scores):
     average_value = calculate_average(scores)
@@ -70,7 +70,7 @@ def create_result(scores):
     else:
         return "FAIL"
 result_value = create_result(scores)
-#print(f"Average score: {round(average_value,2)}, Final Result: {result_value}")
+print(f"Average score: {round(average_value,2)}, Final Result: {result_value}")
     
 # ==================================================
 # TASK 3
@@ -110,7 +110,6 @@ order_settings = {
 def calculate_order(name, *prices, **order_settings):
     prices_subtotal = 0
     final_total = 0
-    settings = []
     for price in prices:
         prices_subtotal += price
     for key, value in order_settings.items():
@@ -121,7 +120,7 @@ def calculate_order(name, *prices, **order_settings):
         else:
             final_total = prices_subtotal + order_settings["shipping"]
 
-    return {"Customer:" : name, "prices_subtotal:" : prices_subtotal, "final_total:" : final_total, "settings:" : settings}
+    return {"Customer:" : name, "prices_subtotal:" : prices_subtotal, "final_total:" : final_total, "settings:" : order_settings}
 result = calculate_order("Anna", *product_prices, **order_settings)
 print("Show me:", result)
 
