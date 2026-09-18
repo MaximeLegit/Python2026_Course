@@ -54,6 +54,13 @@ first_list = [1, 2, 3]
 scnd_list = [4, 5, 6]
 combined = [*first_list, *scnd_list]
 
+######################################################################
+
+def show_user(**kwargs):
+    print("Name:", kwargs.get("Name"), unknown)
+    print("Age:", kwargs.get("Age"), unknown)
+    print("City:", kwargs.get("City"), unknown)
+
 dict_1 = {"theme" : "dark", "language" :  "english"}
 dict_2 = {"discount" : "NO", "language" :  "swe"}
 combined_dict = {**dict_1, **dict_2}
