@@ -1,0 +1,62 @@
+# Part A Mutable default arguments
+
+class BadTeam:
+    def __init__(self, name, members = None):
+        self.name = name
+        self.members = []
+
+    def add_member(self, member):
+        self.members.append(member)
+
+bad_team_one = BadTeam("bad_team_one")
+bad_team_two = BadTeam("bad_team_two")
+bad_team_two.add_member("Lola")
+print("List One:", bad_team_one.members, "List Two:", bad_team_two.members)
+bad_team_one.add_member("Zhora")
+print("List One after ontrudction of None:", bad_team_one.members)
+
+# This work in an odd way such that since the list is initilialised as empty, and how I see it it is part of the constructor,
+# this list is reused. There may be cases where this is wanted but this is generally considered unsafe coding which can lead to many issues later on.
+# AFTER the correct in point 3, when the list for each object call is set to None (empty), each bew call to the class whilst making an objects will have
+# that particular list, not a shared one, that is bound to the object so to say, hence, we have Lola in bad team two but not one.
+
+
+# Part B Dictionary or class?
+
+movie = {"title" : "Memento", "director" : "Christopher Nolan", "rating" : 8.5}
+class Movie:
+    def __init__(self, title, director, rating):
+        self.title = title
+        self.director = director
+        self.rating = rating
+    def is_movie_highly_rated(self):
+        return True if self.rating > 7 else False
+
+movie_class_style = Movie("Memento", "Christopher Nolan", 8.5)
+print("Is Movie highle rated?", movie_class_style.is_movie_highly_rated())
+
+# It usually depends on the use case of course. classes are more versatile, you can add methods inside and do more operations, so it will be neat and tidy.
+# Dictionary, singular use in this case, a one liner, is good if you want to conserve space in memory, for instance, if we need one variable, we would not
+# need a class in this case. We can always access everyhting we need via "key" syntax, roughly. Personally, I would not define a class for a small data set.
+
+
+# Part C Inheritance fundamentals
+
+class Account:
+    def __init__(self, owner, balance):
+        self.owner = owner
+        self.balance = balance
+
+class SavingsAccount(Account):
+    def __init__(self, owner, balance, interest_rate):
+        super().__init__(owner, balance)
+        self.interest_rate = interest_rate
+
+account_one = SavingsAccount("Lola", "5000", "0.03")
+account_two = SavingsAccount("Ida", "25000", "0.09")
+
+print(f"Account one owner: {account_one.owner}, account two balance: {account_two.balance}, account two interest rate: {account_two.interest_rate}")
+
+# My understand is as follows. By invoking the SavingsAccount(Account) call, we are saying that hey python, my class, SA, is inheriting values defined in your 
+# constructor which in this case are owner and balance. Hence, later on when we supply owner and balance, the line super().. says I am reusing what you have
+# already instead of rewriting the same code twice. 

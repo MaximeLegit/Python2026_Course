@@ -244,3 +244,9 @@ print(all_students)
 print(f"Course summary: Course name: {course.course_name}, teacher name: {course.teacher.name}, number of students: {len(all_students)}, Passing students: ")
 for student in passing_studs:
     print(student.name)
+
+
+# Part G Stretch
+
+# ood point .....F7 is actually meant to be a method in Course as well, since it works with the course's list of students.
+# Shure..the wording could definitely be clearer. F7 uses the fixed PASS condition, while G2 takes a score threshold as a paramete
