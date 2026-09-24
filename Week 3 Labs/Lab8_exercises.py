@@ -130,3 +130,24 @@ owner = Owner("lenovo", 2010, "Max")
 
 # Part F Method Overriding
 
+class Notification:
+    def send(self):
+        return "General Message"
+
+class EmailNotification(Notification):
+    def send(self):
+            return "Email Notification"
+
+class SMSNotification(Notification):
+    def send(self):
+        return "SMS Notification"
+
+notifications = [EmailNotification(), SMSNotification()]
+
+for notification in notifications:
+    print(notification.send())
+    # two objects have been created, line 145. First, EmailNotification's send is used to override Notification's send,
+    # subsequently, SMSNotification's method is used to ovver Notification's send
+
+
+# Part G Method Overriding
