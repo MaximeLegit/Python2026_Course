@@ -60,3 +60,72 @@ print(f"Account one owner: {account_one.owner}, account two balance: {account_tw
 # My understand is as follows. By invoking the SavingsAccount(Account) call, we are saying that hey python, my class, SA, is inheriting values defined in your 
 # constructor which in this case are owner and balance. Hence, later on when we supply owner and balance, the line super().. says I am reusing what you have
 # already instead of rewriting the same code twice. 
+
+
+# Part D Inheritance fundamentals
+
+
+class Employee:
+    def __init__(self, name):
+        self.name = name
+
+    def get_information(self):
+        return self.name
+
+class Developer(Employee):
+    def __init__(self, name):
+        super().__init__(name)
+    def set_age(self, age):
+        self.age = age
+
+class Person(Employee):
+    def __init__(self, name):
+        super().__init__(name)
+    def set_gender(self, gender):
+        self.gender = gender
+
+
+developer_one = Developer("Max")
+developer_two = Developer("Sam")
+developer_one.set_age(35)
+developer_two.set_age(36)
+
+print(developer_one.get_information(), developer_two.get_information())
+
+developer_one_gender = Person("Max")
+developer_two_gender = Person("Sam")
+developer_one_gender.set_gender("Male")
+developer_two_gender.set_gender("Female")
+print(developer_one_gender.get_information(), developer_one_gender.gender, "whilst", developer_two_gender.get_information(), developer_two_gender.gender)
+
+employee_object = Employee("Bonita")
+employee_object.get_information() # as we see here, its own method within its class is accessible
+#employee_object.set_age(36) this will give us a compilation error, due to Employee class does NOT see members of Person or Developer class.
+
+
+# Part E super() and shared initialization
+
+class Device:
+    def __init__(self, brand, year):
+        self.brand = brand
+        self.year = year if year > 0 else print("Year must not be a neagtive value")
+        self.is_active = True
+
+class Laptop(Device):
+    def __init__(self, brand, year, ram_gb):
+        super().__init__(brand, year)
+        self.ram_gb = ram_gb
+
+class Owner(Device):
+    def __init__(self, brand, year, owner):
+        super().__init__(brand, year)
+        self.owner = owner
+
+laptop = Laptop("asus", 2000, 21)
+owner = Owner("lenovo", 2010, "Max")
+#print(owner.brand, owner.year, owner.owner)
+#laptop_2 = Laptop("asus", -25, 21)
+#print(laptop_2.brand, laptop_2.year, laptop_2.ram_gb) # this print out will give us none as the error msg id displayed and the negative variable is not assigned
+
+
+# Part F Method Overriding

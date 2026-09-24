@@ -187,7 +187,13 @@ class Teacher:
     def __init__(self, name):
         self.name = name
 
-class Course(Teacher):
+class Course:
+
+    school = "Lexicon"
+    # In this case, after teacher's feedback, it is a good example that whilst having information about students, the curse, the teacher,
+    # there can be multiple schools. It is so simple yet brilliant. This was, if we have this as a class attribute, we can easily define
+    # it to someone else, whilst currently it is hardcoded to "Lexicon", but it can be other things too of course.
+
     def __init__(self, course_name, teacher):
         self.course_name = course_name
         self.teacher = teacher
@@ -196,6 +202,7 @@ class Course(Teacher):
     def add_student(self, student, score):
         self.students.append(Student(student, score))
 
+    # I did this separate method to cover the case that if I want to add more than one student, and the above method is for one respecively.
     def add_students(self, list_of_students):
         self.students.extend(list_of_students)
 
@@ -207,20 +214,32 @@ class Course(Teacher):
             raise ValueError(f"None of the students have passed")
         return [student for student in self.students if student.score >= 70]
 
-teacher_obj = Teacher("Aladdin")
-course = Course("Coding", teacher_obj)
-print("Displaying course name:", course.course_name, "and subsequently the teacher:", course.teacher.name)
+    def update_score(self, student, score):
+        for st in self.students:
+            if student == st.name:
+                st.score = score
+                print("Students:", st.name, "new score is", st.score)
+                break
+        else:
+            print("Requested student not found.")
 
-#course.add_student("Max")
-#course.add_student("Gloria")
-#course.add_student("Janne")
+    def above_threshold(self, threshold):
+        return [student for student in self.students if student.score >= threshold]
 
-#for student in course.students:
-#    print(student)
+#teacher_obj = Teacher("Aladdin")
+course = Course("Coding", "Aladdin")
+print("Displaying course name:", course.course_name, "and subsequently the teacher:", course.teacher)
+
+course.add_student("Max", 55)
+course.add_student("Gloria", 66)
+course.add_student("Janne", 77)
+
+for student in course.students:
+    print(student)
 
 # Part F Applied Challenge
 
-# Explanation: Student and Teacher class have everyting required. I have modified Course class to performing the missing functionalities.
+# Explanation: Student and Teacher class have everyting required. I have modified Course class to perform the missing functionalities.
 # Hence, the only part missing was the 2 students, where we had to create 5 in total, and tests + the course summary which is:
 
 print("Adding previously defined students to the course.")
@@ -241,12 +260,23 @@ print("Now show me all students:")
 all_students = course.get_students()
 print(all_students)
 
-print(f"Course summary: Course name: {course.course_name}, teacher name: {course.teacher.name}, number of students: {len(all_students)}, Passing students: ")
+print(f"Course summary: Course name: {course.course_name}, teacher name: {course.teacher}, number of students: {len(all_students)}, Passing students: ")
 for student in passing_studs:
     print(student.name)
 
 
 # Part G Stretch
 
-# ood point .....F7 is actually meant to be a method in Course as well, since it works with the course's list of students.
-# Shure..the wording could definitely be clearer. F7 uses the fixed PASS condition, while G2 takes a score threshold as a paramete
+
+course.update_score("Max", 99)
+course.update_score("Aladdin", 99)
+
+
+print("Students who scored above 30 are:", course.above_threshold(30))
+
+
+extra_course = Course("Chilling", "Max")
+print("Displaying course name:", extra_course.course_name, "and subsequently the teacher:", extra_course.teacher, "and are there any students?" \
+,extra_course.students, "No! The list is empty since I added none.")
+
+# Last part was added on line 192 along with the explanation.
