@@ -23,6 +23,7 @@ print("List One after ontrudction of None:", bad_team_one.members)
 
 # Part B Dictionary or class?
 
+
 movie = {"title" : "Memento", "director" : "Christopher Nolan", "rating" : 8.5}
 class Movie:
     def __init__(self, title, director, rating):
@@ -150,4 +151,82 @@ for notification in notifications:
     # subsequently, SMSNotification's method is used to ovver Notification's send
 
 
-# Part G Method Overriding
+# Part G Override and still use base
+
+class Report:
+
+    def __init__(self, message):
+        self.message = message
+    def get_summary(self):
+        return self.message
+
+class SalesReport(Report):
+    def get_summary(self):
+        return super().get_summary()
+
+report = Report("We have sold 20 units, Actual profit is 2MSEK, Estimated profit was 2,5MSEK")
+print(report.get_summary())
+sales_report = SalesReport("We have sold 40 units, Actual profit is 4MSEK, Estimated profit was 4,5MSEK").get_summary()
+print(sales_report)
+
+
+# Part H Applied Challenge
+
+
+class User():
+    def __init__(self, username, email):
+        self.username = username
+        self.email = email
+    def get_user(self):
+        return (f"Current user is {self.username} and his/her email is {self.email}")
+
+class AdminUser(User):
+    sudo_rights = True
+
+    def __init__(self, username, email, sudo_rights):
+        super().__init__(username, email)
+        self.sudo_rights = sudo_rights
+
+    def set_user_as_admin(self, user):
+        if user != self.username:
+                raise ValueError(f"Invalid user")
+        self.sudo_rights = True
+        return (user, self.sudo_rights)
+
+    def get_user(self):
+        return (f"Current user is {self.username} and his/her email is {self.email} and is user admin? {self.sudo_rights}")
+
+class PremiumUser(User):
+    execute_rights = True
+
+    def __init__(self, username, email, execute_rights):
+        super().__init__(username, email)
+        self.execute_rights = execute_rights
+
+    def set_user_as_premium(self, user):
+        if user != self.username:
+            raise ValueError(f"Invalid user")
+        self.execute_rights = True
+        return (user, self.execute_rights)
+
+    def get_user(self):
+        added_string = " and does he/she have execute rights? " + str(self.execute_rights)
+        return super().get_user() + added_string
+
+user_a = User("Lola", "lola@lola.com")
+print(user_a.get_user())
+
+user_b = AdminUser(user_a.username, user_a.email, False)
+print(user_b.get_user())
+user_b.set_user_as_admin(user_b.username)
+print("How bout now?", user_b.get_user())
+
+user_c = PremiumUser("Leo", "leo@leo.com", False)
+print(user_c.get_user())
+user_c.set_user_as_premium("Leo")
+print("How bout now?", user_c.get_user())
+
+#user_c.set_user_as_premium("Mambo")  <- this gives us the desired value error if we are entering the wrong person
+
+# IS-A. My understanding is as follows, whne we define Admin and Premium clases, we are essentially saying Premium is a User, not that
+# premium has a user. Thereby, we are inheriting its username and email fields as to NOT rewrite since it makes little sense.
