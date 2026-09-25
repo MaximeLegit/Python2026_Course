@@ -119,3 +119,22 @@ for ds in display_statuses:
     print(ds.display_status())
 # This works simple since each class is its own entity with a function called display_status(). I simply create an object and then call that function
 # that happens to have the same name, nothing more. Henec you see the printy print and screeny screen.
+
+
+# Part D. isinstance()
+
+
+class User:
+    def who_am_i(self):
+        return "User"
+
+class AdminUser(User):
+    def who_am_i(self):
+        return "AdminUser"
+
+auo = AdminUser()
+print(f"Is auo an object is an AdminUser object? {isinstance(auo, AdminUser)}, a user object? {isinstance(auo, User)} and is it a string? {isinstance(auo, str)}")
+
+# Admin user is considered an instance of user because of the IS-A relationship here, since AdminUser class inherits the User class, line 131.
+
+
