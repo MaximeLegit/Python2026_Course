@@ -104,7 +104,6 @@ for document in documents:
 # Part C. Duck typing
 
 
-
 class Printer():
     def display_status(self):
         return "Printy Print"
@@ -136,5 +135,29 @@ auo = AdminUser()
 print(f"Is auo an object is an AdminUser object? {isinstance(auo, AdminUser)}, a user object? {isinstance(auo, User)} and is it a string? {isinstance(auo, str)}")
 
 # Admin user is considered an instance of user because of the IS-A relationship here, since AdminUser class inherits the User class, line 131.
+
+
+# Part F. __str__ with inheritance
+
+
+
+class Account:
+    def __init__(self, owner, balance):
+        self.owner = owner
+        self.balance = balance
+    def __str__(self):
+        return f"{self.owner} - Balance: {self.balance}"
+
+class SavingsAccount(Account):
+    def __init__(self, owner, balance, interest_rate):
+        super().__init__(owner, balance)
+        self.interest_rate = interest_rate
+    def __str__(self):
+        return super().__str__() + f" Interest rate: {self.interest_rate}"
+
+account = Account("Lola", 9999)
+savings_account = SavingsAccount("Max", 8888, 0.02)
+
+print(savings_account)
 
 
