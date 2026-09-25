@@ -140,7 +140,6 @@ print(f"Is auo an object is an AdminUser object? {isinstance(auo, AdminUser)}, a
 # Part F. __str__ with inheritance
 
 
-
 class Account:
     def __init__(self, owner, balance):
         self.owner = owner
@@ -161,3 +160,79 @@ savings_account = SavingsAccount("Max", 8888, 0.02)
 print(savings_account)
 
 
+# Part G. Inheritance or composition
+
+
+class CPU:
+    def __init__(self, model):
+        self.model = model
+
+class Computer:
+    def __init__(self, cpu, brand):
+        self.cpu = cpu
+        self.brand = brand
+
+cpu = CPU("7950x3D")
+computer = Computer(cpu, "Ryzen")
+
+print("Model:", computer.cpu.model, "Brand:", computer.brand)
+
+# so by using composition, we do not inheriten the cpu class directly, but we rather reference it in the constructor so that when the
+# computer is created, we may insert the cpu object. 
+# Car / Engine       - composition HAS - A
+# Manager / Employee - composition HAS - A
+# Course / Teacher   - composition HAS - A
+# Phone / Device     - inheritance IS - A
+
+
+# Part H. Applied Challenge
+
+class Exporter:
+    def export(self, data):
+        print("Exporter data:", data)
+ 
+    def __str__(self):
+        return "Generic Exporter"
+
+class ConsoleExporter(Exporter):
+    def export(self, data):
+        print(f"Console Exporter: {data}")
+ 
+    def __str__(self):
+        return "Console Exporter"
+
+class TextExporter(Exporter):
+    def export(self, data):
+        print(f"Text exporter: {data}")
+ 
+    def __str__(self):
+        return "Text Exporter"
+ 
+class SummaryExporter(Exporter):
+    def export(self, data):
+        print(f"Summary Exporter: {data}")
+ 
+    def __str__(self):
+        return "Summary Exporter"
+
+
+print("###############################\n\n")
+data = "Data to be printed by EACH exporter"
+exporters = [Exporter(), ConsoleExporter(), TextExporter(), SummaryExporter()]
+for exporter in exporters:
+    print("\nUsing", exporter)
+    exporter.export(data)
+
+class OutsideExporter:
+    def export(self, data):
+        print(f"OutsideExporter: {data}")
+ 
+    def __str__(self):
+        return "OutsideExporter, with same calling code"
+oe = OutsideExporter()
+print("\nShow it can be used by the same calling code: ", oe)
+
+print("\n###############################\n")
+final_exporters = [ConsoleExporter(), OutsideExporter()]
+for fe in final_exporters:
+    print(f"Is {fe} an instance of Exporter? {isinstance(fe, Exporter)}")
