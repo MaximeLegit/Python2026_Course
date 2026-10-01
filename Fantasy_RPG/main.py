@@ -52,6 +52,18 @@ class Character:
         opponent_attack = sorted_opponents[1].attack
         return {"opponent" : opponent, "opponent_health" :opponent_health, "opponent_damage" : opponent_damage, "opponent_attack" : opponent_attack}
 
+    @classmethod
+    def get_inventory(cls):
+        return [item for item in inventory]
+    
+    @classmethod
+    def statistics(self, character_name):
+        info = Character.get_character_stats(character_name)
+        if info.get("character_name") is not None:
+            print(f"\nCharacter name: {character_name}, character health: {info.get("health")}, character weapon: {info.get("weapon")}, Items in inventory: {self.get_inventory()}\n")
+        else:
+            print("Requested character not found. Please type the correct name.")
+
 class CharacterActions():
 
     def attack(self, damage):
@@ -62,30 +74,36 @@ class CharacterActions():
 
     def initiate_hut_dialogue(self, character_name):
         print("A smithy is in the hut. She notices you. She asks you what are you doing in such an odd place?")
-        player_answer = input()
-        if "journey" in player_answer or "battle" in player_answer:
-            print("Ah, you must be a warrior of great renown. As such, I can forge you a legendary dagger that was wielded by Ragnar himself. Would you like that? Y/N")
-            weapon_answer = input()
-            match weapon_answer:
-                case "Y":
-                    self.update_character(character_name, "viking dagger")
-                case "N":
-                    print("No? I see. You have a decent weapon already.. You move on with your journey.") # back to part three scenario.
-        else:
-            print("Well, seems you are not much of a talker, best be on yer way then.")
+        while True: # smithy dialogue
+            player_answer = input()
+            if "journey" in player_answer or "battle" in player_answer:
+                print("Ah, you must be a warrior of great renown. As such, I can forge you a legendary dagger that was wielded by Ragnar himself. Would you like that? Y/N")
+                weapon_answer = input().upper()
+                match weapon_answer:
+                    case "Y":
+                        self.update_character(character_name, "viking dagger")
+                        break
+                    case "N":
+                        print("No? I see. You have a decent weapon already.. You move on with your journey.") 
+                        break # back to part three scenario.
+                    case _:
+                        print("Unknown input, please try again.")
+            else:
+                print("Well, seems you are not much of a talker, best be on yer way then.")
+                break
 
     def look_around(self, character_name, stage = None):
         
         match stage:
-            case "one":
+            case "1":
                 seed = random.randint(0,100)
                 if seed in range(35,55):
                     print("Congratulations. You have found a magic mushroom.")
                     inventory.append("Magic Shroom")
                 else:
                     print("You did not find anything.")
-            case "two":
-                luck = 6 #random.randint(0,10)
+            case "2":
+                luck = random.randint(0,10) #5 hardcode to trigger
                 if luck >= 5:
                     print("You see, through this thick fog, just barely, that there is a hut. Shining inside is a dim light" \
                     "Do you proceed inside of it?  Y/N.")
@@ -97,19 +115,9 @@ class CharacterActions():
                             print("You move on.") # back to part three scenario.
                         case _: print("Please follow the predefined answers, Y or N.")
 
-    def use_ability(self, opponent):
-        print("Opponent is attacking with", character_attacks[opponent])
+    #def use_ability(self, opponent):
+        #print("Opponent is attacking with", character_attacks[opponent])
         # NOT USED YET
-
-    def inventory(self):
-        return [item for item in inventory]
-
-    def statistics(self, character_name):
-        info = Character.get_character_stats(character_name)
-        if info.get("character_name") is not None:
-            print(f"\nCharacter name: {character_name}, character health: {info.get("health")}, character weapon: {info.get("weapon")}, Items in inventory: {self.inventory()}\n")
-        else:
-            print("Requested character not found. Please type the correct name.")
 
     def update_character(self, character_name, action, current_health = 0):
         #global characters
@@ -130,6 +138,9 @@ class CharacterActions():
                         character.weapon.points += 10
                     case "remove":
                         characters.remove(character)
+                    case "shroom":
+                        character.weapon.points += 15
+                        character.health += 25
                     case "viking dagger":
                         character.weapon.weapon = "Drengiligr"
                         character.weapon.points = 40
@@ -171,30 +182,32 @@ class Story(CharacterActions):
     #global inventory
     def story_part_one(self, character_name):
         PrintOuts.story_one_print("part 1")
-
-        while True:
+        while True: # story inner loop
+            
             choice = input("Choose an option:\n").strip()
         
             if choice == "1":
-                PrintOuts.story_three_print("part 2")
-                first_q_a = input().strip()
+                PrintOuts.story_one_print("part 3")
+                while True: #inner conversation loop
+                    first_q_a = input().strip()
 
-                if "church" in first_q_a or "explore" in first_q_a:
-                    PrintOuts.story_three_print("part 3")
+                    if "church" in first_q_a or "explore" in first_q_a or "cathedral" in first_q_a:
+                        PrintOuts.story_one_print("part 4")
+                        break
 
-                elif "beverage" in first_q_a:
-                    PrintOuts.story_three_print("part 4")
-                    second_q_a = input().strip()
-                    if second_q_a == "Y":
-                        PrintOuts.story_three_print("part 5")
-                        self.update_character(character_name, "intoxication")
+                    elif "beverage" in first_q_a:
+                        PrintOuts.story_one_print("part 5")
+                        second_q_a = input().strip()
+                        if second_q_a == "Y":
+                            PrintOuts.story_one_print("part 6")
+                            self.update_character(character_name, "intoxication")
+                        else:
+                            PrintOuts.story_one_print("part 7")
+                            inventory.append("Lucky_Charm")
+                        break # escape from dialogue
+
                     else:
-                        PrintOuts.story_three_print("part 6")
-                        inventory.append("Lucky_Charm")
-                        # show one and two again, misleading.
-                else:
-                    print("Sorry, not familiar with the your language. Please rephrase")
-                    # Note to self, probably should add extra print outs. 
+                        print("Sorry, not familiar with the your language. Please rephrase.")
 
             elif choice == "2":
                 print("Going through the treaturous woods.")
@@ -202,6 +215,7 @@ class Story(CharacterActions):
                 break
             else:
                 print("\nInvalid input. Please select one of the options.")
+            PrintOuts.story_one_print("part 2")
 
     def story_part_two(self, character_name):
         global death_state
@@ -247,7 +261,7 @@ class Story(CharacterActions):
                 
                 action = input().strip().upper()
                 match action:
-                    case "Y": self.look_around(character_name, "one")
+                    case "Y": self.look_around(character_name, "1")
                     case "N": print("You do not look around, you move on.")
                     case   _: print("Please follow the predefined answers, Y or N.")
                 self.story_part_three(character_name)
@@ -259,25 +273,24 @@ class Story(CharacterActions):
 
     def story_part_three(self, character_name):
         global death_state
-        
+        PrintOuts.story_three_print("part 1")
         while True:
-            PrintOuts.story_three_print()
+            PrintOuts.story_three_print("part 2")
             choice = input("\n").strip()
             match choice:
                 case "1":
-                    self.look_around("two")
-                case "2":
                     print("Being a fierce warrior, you proceed. as you approach the end of the rest, you spot a shadow of a person, or someone that resembles a person.")
                     opponent = Character.get_specific_opponent()
                     self.do_battle(character_name, opponent)
                     if death_state:
                         break
                     self.final_act(character_name) 
+                case "2":
+                    self.look_around(character_name, "2")
                 case "3":
                     self.update_character(character_name, "resting")
-                    print("\nYour health has been restored.")
                 case "4":
-                    self.statistics(character_name)
+                    Character.statistics(character_name)
                 case _:
                     print("Unrecognized input. Please type in a number from 1 to 4.")
 
@@ -289,7 +302,32 @@ class Story(CharacterActions):
         self.do_battle(character_name, opponent_stats, True)
 
     def final_act(self, character_name):
-        PrintOuts.final_act()
+        PrintOuts.final_act("part 1")
+        while True:
+            PrintOuts.final_act("part 2")
+            choice = input("\n").strip()
+            match choice:
+                case "1":
+                    print("Being a fierce warrior, you proceed. as you approach the end of the journey, you spot a shadow of a person, or someone that resembles a person.")
+                    opponent = Character.get_specific_opponent()
+                    self.do_battle(character_name, opponent)
+                    if death_state:
+                        break
+                    self.final_act(character_name)
+                case "2":
+                    print("\nHelp me please.")
+                case "3":
+                    Character.get_character_stats(character_name)
+                case "4":
+                    items = Character.get_inventory() # only used inventory for one person
+                    print("Your current items in inventory are ", items)
+                    for i in items:
+                        if i == "Magic Shroom":
+                            self.update_character(character_name, "shroom")
+                        elif i == "Lucky_Charm":
+                            self.update_character(character_name, "empowered")
+                case _:
+                    print("Unrecognized input. Please type in a number from 1 to 4.")
 
 #name, health, weapon, damage, attack
 characters = [
@@ -344,7 +382,7 @@ def begin_rpg():
         elif choice == "2":
             story_object.brutal_brawl(character_name)
         elif choice == "3":
-            story_object.statistics(character_name)
+            Character.statistics(character_name)
         elif choice == "X":
             print("Thank you for playing.")
             break
