@@ -1,4 +1,6 @@
 import random
+from print_outs import PrintOuts
+from character import Character
 
 #Global variables
 character_name = None
@@ -42,7 +44,7 @@ class Character:
 
     @classmethod
     def get_specific_opponent(cls):
-        sorted_opponents = sorted(characters, key=lambda character: character.health)
+        sorted_opponents = sorted(characters, key=lambda character : character.health)
         # Take second weakest opponent
         opponent = sorted_opponents[1].name 
         opponent_health = sorted_opponents[1].health
@@ -50,7 +52,7 @@ class Character:
         opponent_attack = sorted_opponents[1].attack
         return {"opponent" : opponent, "opponent_health" :opponent_health, "opponent_damage" : opponent_damage, "opponent_attack" : opponent_attack}
 
-class CharacterActions:
+class CharacterActions():
 
     def attack(self, damage):
         return damage
@@ -62,7 +64,7 @@ class CharacterActions:
         print("A smithy is in the hut. She notices you. She asks you what are you doing in such an odd place?")
         player_answer = input()
         if "journey" in player_answer or "battle" in player_answer:
-            print("Ah, you must be a warrior of great renown. As such, I can smith you the legendary dagger that was wielded by Ragnar himself. Would you like that? Y/N")
+            print("Ah, you must be a warrior of great renown. As such, I can forge you a legendary dagger that was wielded by Ragnar himself. Would you like that? Y/N")
             weapon_answer = input()
             match weapon_answer:
                 case "Y":
@@ -72,7 +74,7 @@ class CharacterActions:
         else:
             print("Well, seems you are not much of a talker, best be on yer way then.")
 
-    def look_around(self, character_name, stage = 0):
+    def look_around(self, character_name, stage = None):
         
         match stage:
             case "one":
@@ -105,7 +107,7 @@ class CharacterActions:
     def statistics(self, character_name):
         info = Character.get_character_stats(character_name)
         if info.get("character_name") is not None:
-            print(f"Status:\nCharacter name: {character_name}, character health: {info.get("health")}, character weapon: {info.get("weapon")}, Items in inventory: {self.inventory()}")
+            print(f"\nCharacter name: {character_name}, character health: {info.get("health")}, character weapon: {info.get("weapon")}, Items in inventory: {self.inventory()}\n")
         else:
             print("Requested character not found. Please type the correct name.")
 
@@ -121,10 +123,9 @@ class CharacterActions:
                     case "resting":
                         if character.health != 100:
                             character.health = 100
-                            print("SHOW ME: ", character.health, character.attack, character.weapon.weapon)
                     case "heal":
                         if character.health != 100:
-                            character.health += 10
+                            character.health += 15
                     case "empowered":
                         character.weapon.points += 10
                     case "remove":
@@ -143,56 +144,57 @@ class CharacterActions:
         character_stats = Character.get_character_stats(character_name)
 
         while True:
-            print(f"{character_name} attacks with {character_stats["attack"]}")
+            print(f"\n{character_name} attacks with {character_stats["attack"]}")
             opponent_stats["opponent_health"] -= self.attack(character_stats["damage"])
 
-            print("Opponent's turn. The opponent attacks with", opponent_stats["opponent_attack"])
+            print("\nOpponent's turn. The opponent attacks with", opponent_stats["opponent_attack"])
             character_stats["health"] -= self.attack(opponent_stats["opponent_damage"])
             
             if opponent_stats["opponent_health"] < 0:
-                print(f"Ah.. I, {opponent_stats["opponent"]}, have been slain.. You have won...Farewell")
+                print(f"\nAh.. I, {opponent_stats["opponent"]}, have been slain.. You have won...Farewell\n")
+                print(f"################# VICTORY, BOW ME TO, YOU WORM ###################\n")
                 if brutal_brawl is False:
                     self.update_character(opponent_stats["opponent"], "remove")
                     self.update_character(character_name, "survived_battle", character_stats["health"])
                 break
-            elif character_stats["health"] < 0:
-                print("The brawl has ended. You died..")
+            elif character_stats["health"] < 0: #bug, perhaps 
+                print("\nThe brawl has ended. YOU DIED...\n")
+                print(f"################ NO ONE CAN DEFEAT {opponent_stats["opponent"]} ###################\n")
+
                 self.update_character(character_name, "remove")
+                inventory.clear()
                 death_state = True
                 break
-            print("Your health:", character_stats["health"], "opponent's health:", opponent_stats["opponent_health"])
+            print("\nYour health:", character_stats["health"], "opponent's health:", opponent_stats["opponent_health"])
 
 class Story(CharacterActions):
     #global inventory
     def story_part_one(self, character_name):
-        print("Welcome to the game. You have several options to explore from. The story revolves around reaching the Carthia Cathedral, located at the West Valley." \
-        "In order to get there, you need to find someone to speak to, to get information about the journey. Currently, you are located at the starting point in" \
-        "the city tavern. Would you like to talk to the keep, get some rest or go straight into the unknown ?" \
-        "\n1. Talk to the keep\n2. Go straight into the unknown.")
+        PrintOuts.story_one_print("part 1")
 
         while True:
             choice = input("Choose an option:\n").strip()
         
             if choice == "1":
-                print("Well howdy there stranger, what brings you to these lands?")
+                PrintOuts.story_three_print("part 2")
                 first_q_a = input().strip()
 
                 if "church" in first_q_a or "explore" in first_q_a:
-                    print("Well, as you know, you are currently in the capital's tavern. Legend has it that the fiercest warrior is located in the Carthia Cathedral," \
-                    " at the heart of the West Valley. The road there goes through treaturous woods, city of the forgotten warriors, and the famous merridian bazar.")
+                    PrintOuts.story_three_print("part 3")
+
                 elif "beverage" in first_q_a:
-                    print("Ah, well, I am aftraid the only liquid matter we have in this establishment is ale, would you like some? Y/N.")
+                    PrintOuts.story_three_print("part 4")
                     second_q_a = input().strip()
                     if second_q_a == "Y":
-                        print("Here you go sonny, on the house. Now, best be on your way to the west walley!")
+                        PrintOuts.story_three_print("part 5")
                         self.update_character(character_name, "intoxication")
                     else:
-                        print("No? Then best be on your way. Since you are a true human of unyielding faith, here is a lucky talisman for you.")
+                        PrintOuts.story_three_print("part 6")
                         inventory.append("Lucky_Charm")
-                    # shwo one and two again, misleading.
+                        # show one and two again, misleading.
                 else:
                     print("Sorry, not familiar with the your language. Please rephrase")
-            # Note to self, probably should add extra print outs. 
+                    # Note to self, probably should add extra print outs. 
 
             elif choice == "2":
                 print("Going through the treaturous woods.")
@@ -203,17 +205,15 @@ class Story(CharacterActions):
 
     def story_part_two(self, character_name):
         global death_state
-        print("\nChapter 1. Treaturous Woods.\n" \
-        "As you step into the woods, you are feeling very enforced, very strong ( even if you are not ). The legend has it that all new travellers get a blessing" \
-        "from the lady of the woods, as to not to succumb to the dangers that lie ahead. You feel warmth.")
+        PrintOuts.story_two_print("part 1")
         self.update_character(character_name, "empowered")
         
-        print("\nAs you go along the woods, you see that the path diverges. You have a choice to make. Go left or go right. Please select accordingly.")
+        PrintOuts.story_two_print("part 2")
+
         while True:
             choice = input().strip().lower()
             if choice == "left":
-                print("\nAs you progress along the path to the left, you feel a chill in the air. You sense danger.. Lo and behold, your first opponent" \
-                "\nPlease type any number from 1 to 9. This ritual is done by the lady of the woods to help new travellers get accross safely.\n")
+                PrintOuts.story_two_print("part 3")
                 luck = int(input())
                 opponent_stats = Character.generate_opponent()
 
@@ -221,6 +221,7 @@ class Story(CharacterActions):
                 current_state_after_battle = Character.get_character_stats(character_name)
 
                 if death_state:
+                    PrintOuts.main_loop_print()
                     break
                 else:
                     print(f"\nYou have survived my tarnished. Your current health is {current_state_after_battle["health"]}." \
@@ -241,10 +242,9 @@ class Story(CharacterActions):
                 self.story_part_three(character_name)
 
             elif choice == "right":
-                print("You were right since the right path is always right.")
+                PrintOuts.story_two_print("part 4")
                 inventory.append("Heal Potion")
-
-                print("My young tarnished. Thou art weary. Does thou wish to look around to see if you find something before you leave this forest? Y/N")
+                
                 action = input().strip().upper()
                 match action:
                     case "Y": self.look_around(character_name, "one")
@@ -252,22 +252,16 @@ class Story(CharacterActions):
                     case   _: print("Please follow the predefined answers, Y or N.")
                 self.story_part_three(character_name)
                 if death_state:
+                    PrintOuts.main_loop_print()
                     break
-                
-                    # add original display options
             else:
                 print("Unknown input. Please type the word right or left.")
 
     def story_part_three(self, character_name):
         global death_state
-        print("\nChapter 2. City of the forgotten warriors")
-        print("\nYou have survived your first part of the journey. This city, the city of the forgotten warriors, is a an odd place. It is foggy, dark, and cold." \
-        "The sudden chill in your bones, you have felt it before, this unease, this forebodem before a battle. Knowing this, you have the following options:" \
-        "\n1. Look around" \
-        "\n2. Continue majestically, like the fearless person you are and see what awaits you." \
-        "\n3. Rest" \
-        "\n4. Show character's current state and invetory")
+        
         while True:
+            PrintOuts.story_three_print()
             choice = input("\n").strip()
             match choice:
                 case "1":
@@ -295,7 +289,7 @@ class Story(CharacterActions):
         self.do_battle(character_name, opponent_stats, True)
 
     def final_act(self, character_name):
-        print("\nChapter 3. Final Act.")
+        PrintOuts.final_act()
 
 #name, health, weapon, damage, attack
 characters = [
@@ -307,50 +301,55 @@ characters = [
     Character("Laxasia", 50, Weapon("Sword", 22), "Mock Darkness")
 ]
 
-def begin_rpg():
+def character_creation():
     global characters
     global character_name
-    story_object = Story()
-    character_stats = None
-    print("This is an acton RPG game. Primary goal is NOT to die. However, opponents are tough. ")
-    choice = input("Would you like to have your own character and weapon? If yes, please click 1, if not, please click 2. This will preselect a charcater for you.\n")
-    
-    if choice == "1":
-        character_name = input("Character name:\n").strip()
-        weapon = input("Character weapon\n").strip()
-        # original weapon dmg = random.randint(1,100) 
-        characters.append(Character(character_name, 100, Weapon(weapon, 30), "MegaWonk"))
-        print(f"Your character name is {character_name}, your weapon is {weapon}, and your health is 100. \nMay the force be with you.")
-        # add or jsut append to character_stats
-
-    else:
-        character_stats = Character.generate_character()
-        character_name = character_stats["character_name"]
-        characters.append(Character(character_stats["character_name"], character_stats["health"], 
-                          Weapon(character_stats["weapon"], character_stats["damage"]), "Moonlight Frost Breeze"))
-    
-    print("Now, let the quest begin! What would you like to do? Select the options that are of interest!")
-    print("1. Begin Story")
-    print("2. Brutal Brawl (Not for beginners!)")
-    print("3. Show current character's statistics. Please enter the name here instead of nr 3.")
-    print("X. Exit Game")
-
+    print("Would you like to have your own character and weapon? If yes, please click 1, if not, please click 2. This will pre-select a character for you.\n")
     while True:
-        choice = input("Main menu options:\n").strip()
-        if death_state:
+        choice = input()
+        if choice == "1":
+            character_name = input("Character name:\n").strip()
+            weapon = input("Character weapon\n").strip()
+            # original weapon dmg = random.randint(1,100) 
+            characters.append(Character(character_name, 100, Weapon(weapon, 30), "MegaWonk"))
+            print(f"Your character name is {character_name}, your weapon is {weapon}, and your health is 100. \nMay the force be with you.")
+            break
+        elif choice == "2":
+            character_stats = Character.generate_character()
+            character_name = character_stats["character_name"]
+            characters.append(Character(character_stats["character_name"], character_stats["health"], 
+                Weapon(character_stats["weapon"], character_stats["damage"]), "Moonlight Frost Breeze"))
             break
         else:
-            if choice == "1":
-                story_object.story_part_one(character_name)
-            elif choice == "2":
-                story_object.brutal_brawl(character_name)
-            elif choice == character_name:
-                story_object.statistics(character_name)
-            elif choice == "X":
-                print("Thank you for playing.")
-                break
-            else:
-                print("\nInvalid option. Please try again.")
+            print("\nInvalid option. Please try again.")
+
+def begin_rpg():
+    story_object = Story()
+    character_stats = None
+    global death_state
+    print("This is an action RPG game. Primary goal is NOT to die. However, opponents are tough. ")
+
+    character_creation()
+
+    while True:
+        if death_state:
+            character_creation()
+            death_state = False
+            continue
+        PrintOuts.main_loop_print()
+        choice = input("\nPlease select the desired options:\n").strip()
+
+        if choice == "1":
+            story_object.story_part_one(character_name)
+        elif choice == "2":
+            story_object.brutal_brawl(character_name)
+        elif choice == "3":
+            story_object.statistics(character_name)
+        elif choice == "X":
+            print("Thank you for playing.")
+            break
+        else:
+            print("\nInvalid option. Please try again.")
 
 if __name__ == '__main__':
     begin_rpg()
