@@ -1,6 +1,6 @@
 import random
+import sys
 from print_outs import PrintOuts
-from character import Character
 
 #Global variables
 character_name = None
@@ -43,13 +43,20 @@ class Character:
                 return {"character_name" : character.name, "health" : character.health, "weapon" : character.weapon.weapon, "damage" : character.weapon.points, "attack" : character.attack}
 
     @classmethod
-    def get_specific_opponent(cls):
+    def get_specific_opponent(cls, opponent_name = None):
+
         sorted_opponents = sorted(characters, key=lambda character : character.health)
-        # Take second weakest opponent
-        opponent = sorted_opponents[1].name 
-        opponent_health = sorted_opponents[1].health
-        opponent_damage = sorted_opponents[1].weapon.points
-        opponent_attack = sorted_opponents[1].attack
+        if opponent_name == "Gilgamesh":
+            opponent = sorted_opponents[-1].name
+            opponent_health = sorted_opponents[-1].health
+            opponent_damage = sorted_opponents[-1].weapon.points
+            opponent_attack = sorted_opponents[-1].attack
+        else:
+        # Take weakest opponent
+            opponent = sorted_opponents[0].name
+            opponent_health = sorted_opponents[0].health
+            opponent_damage = sorted_opponents[0].weapon.points
+            opponent_attack = sorted_opponents[0].attack
         return {"opponent" : opponent, "opponent_health" :opponent_health, "opponent_damage" : opponent_damage, "opponent_attack" : opponent_attack}
 
     @classmethod
@@ -66,6 +73,12 @@ class Character:
 
 class CharacterActions():
 
+    item_actions = {
+        "Magic Shroom" : "shroom",
+        "Lucky Charm" : "empowered",
+        "Heal Potion" : "heal"
+    }
+
     def attack(self, damage):
         return damage
 
@@ -73,24 +86,37 @@ class CharacterActions():
         print("Dodge")
 
     def initiate_hut_dialogue(self, character_name):
-        print("A smithy is in the hut. She notices you. She asks you what are you doing in such an odd place?")
+        PrintOuts.hut_dialogue("part 1")
         while True: # smithy dialogue
             player_answer = input()
             if "journey" in player_answer or "battle" in player_answer:
-                print("Ah, you must be a warrior of great renown. As such, I can forge you a legendary dagger that was wielded by Ragnar himself. Would you like that? Y/N")
+                PrintOuts.hut_dialogue("part 2")
                 weapon_answer = input().upper()
                 match weapon_answer:
                     case "Y":
                         self.update_character(character_name, "viking dagger")
                         break
                     case "N":
-                        print("No? I see. You have a decent weapon already.. You move on with your journey.") 
+                        PrintOuts.hut_dialogue("part 3")
                         break # back to part three scenario.
                     case _:
                         print("Unknown input, please try again.")
             else:
-                print("Well, seems you are not much of a talker, best be on yer way then.")
+                PrintOuts.hut_dialogue("part 4")
                 break
+
+    def use_inventory(self, character_name, user_choice, items_in_invetory):
+        if user_choice == "all":
+            for item in items_in_invetory:
+                action = self.item_actions.get(item)
+                if action:
+                    self.update_character(character_name, action)
+        else:
+            user_choice = self.item_actions.get(item)
+            if action:
+                self.update_character(character_name, user_choice)
+            else:
+                print("\nNothing could be used.")
 
     def look_around(self, character_name, stage = None):
         
@@ -153,12 +179,12 @@ class CharacterActions():
             self.update_character(character_name, "empowered")
 
         character_stats = Character.get_character_stats(character_name)
-
+        print("SHOW MEEEEEE", character_stats["character_name"], character_stats["weapon"], character_stats["attack"],)
         while True:
             print(f"\n{character_name} attacks with {character_stats["attack"]}")
             opponent_stats["opponent_health"] -= self.attack(character_stats["damage"])
 
-            print("\nOpponent's turn. The opponent attacks with", opponent_stats["opponent_attack"])
+            print("\nOpponent's turn. The", opponent_stats["opponent"],"attacks with", opponent_stats["opponent_attack"])
             character_stats["health"] -= self.attack(opponent_stats["opponent_damage"])
             
             if opponent_stats["opponent_health"] < 0:
@@ -197,13 +223,13 @@ class Story(CharacterActions):
 
                     elif "beverage" in first_q_a:
                         PrintOuts.story_one_print("part 5")
-                        second_q_a = input().strip()
+                        second_q_a = input().strip().upper()
                         if second_q_a == "Y":
                             PrintOuts.story_one_print("part 6")
                             self.update_character(character_name, "intoxication")
                         else:
                             PrintOuts.story_one_print("part 7")
-                            inventory.append("Lucky_Charm")
+                            inventory.append("Lucky Charm")
                         break # escape from dialogue
 
                     else:
@@ -235,7 +261,6 @@ class Story(CharacterActions):
                 current_state_after_battle = Character.get_character_stats(character_name)
 
                 if death_state:
-                    PrintOuts.main_loop_print()
                     break
                 else:
                     print(f"\nYou have survived my tarnished. Your current health is {current_state_after_battle["health"]}." \
@@ -254,6 +279,8 @@ class Story(CharacterActions):
                             case _: print("Please follow the predefined answers, Y or N.")
                 # check trigger        
                 self.story_part_three(character_name)
+                if death_state:
+                    break
 
             elif choice == "right":
                 PrintOuts.story_two_print("part 4")
@@ -309,23 +336,32 @@ class Story(CharacterActions):
             match choice:
                 case "1":
                     print("Being a fierce warrior, you proceed. as you approach the end of the journey, you spot a shadow of a person, or someone that resembles a person.")
-                    opponent = Character.get_specific_opponent()
+                    opponent = Character.get_specific_opponent("Gilgamesh")
                     self.do_battle(character_name, opponent)
                     if death_state:
-                        break
-                    self.final_act(character_name)
+                        print(f"\n################ Sadly, it is hard to beat King of Heroes, Gilgamesh. Better luck next time! ###################\n")
+                    print("\n################ GAME OVER ################" \
+                    "\n ################ Thank you for playing, Ta Ta ################.")
+                    sys.exit(-1)
                 case "2":
                     print("\nHelp me please.")
                 case "3":
                     Character.get_character_stats(character_name)
                 case "4":
                     items = Character.get_inventory() # only used inventory for one person
-                    print("Your current items in inventory are ", items)
-                    for i in items:
-                        if i == "Magic Shroom":
-                            self.update_character(character_name, "shroom")
-                        elif i == "Lucky_Charm":
-                            self.update_character(character_name, "empowered")
+                    print("Your current items in inventory are ", items, "Do you wish to use all of them or a specific one or none? Please type all, specific, or none.")
+                    choice = input("\n").strip().lower()
+                    print("\n\nShow me choice: ", choice)
+                    if "all" in choice:
+                        self.use_inventory(character_name, "all", inventory)
+                    elif "specific" in choice:
+                        print("You have in your invetory: ", Character.get_inventory(), "Which item do you want to use?")
+                        choice = input("\n").strip()
+                        self.use_inventory(character_name, choice, inventory)
+                    elif "none" in choice:
+                        print("\nNo items used, you proceed towards the final battle.")
+                    else:
+                        print("Please follow the predefined answers, all, none, specific.")
                 case _:
                     print("Unrecognized input. Please type in a number from 1 to 4.")
 
@@ -342,7 +378,7 @@ characters = [
 def character_creation():
     global characters
     global character_name
-    print("Would you like to have your own character and weapon? If yes, please click 1, if not, please click 2. This will pre-select a character for you.\n")
+    print("Would you like to have your own character and weapon? If yes, please click 1, if not, please click 2. This will pre-select a character for you.")
     while True:
         choice = input()
         if choice == "1":
